@@ -24,6 +24,11 @@ class Game:
             self.add_communityCard
 
             # player logic
+            for player in self.players:
+                # all players bet
+                player.bet(self.blinds)
+        
+        self.getWinner()
     
     # shuffle then deal cards
     def deal_cards(self):
@@ -42,3 +47,7 @@ class Game:
     # set flop
     def add_communityCard(self):
         self.community_cards.append(self.deck.deal_card)
+    
+    # determine winner
+    def getWinner():
+        return
