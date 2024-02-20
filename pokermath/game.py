@@ -12,7 +12,7 @@ class Game:
         self.deck = Deck()
         self.community_cards = []
         self.pot = 0
-        self.hand_rankings = self.set_handRankigs()
+        self.hand_rankings = self.set_handRankings()
     
     # game loop
     def play_round(self):
@@ -54,7 +54,7 @@ class Game:
     
     # determine winner
     def getWinner(players, community_cards):
-        hands = []
+        rankings = []
         winner = None
 
         # iterate through the players hands
@@ -62,8 +62,8 @@ class Game:
             hand = player.get_hand() + community_cards
 
             # classify hand
-            hand_class = classify_hand(hand)
-            hands.append(hand)
+            hand_class = self.classify_hand(hand)
+            rankings.append(self.hand_rankings[hand_class])
 
         return
     
@@ -100,8 +100,60 @@ class Game:
         
         num_suits = len(suit_counts)
 
-        # check for royal flush
-        royal_flush = ["10", "Jack", "Queen", "King", "Ace"]
+        # for 1 suit in hand
+        if num_suits == 1:
+            # check for royal flush
+            royal_flush = ["10", "Jack", "Queen", "King", "Ace"]
 
-        if sorted_hand == royal_flush:
-            return "Royal Flush"
+            if sorted_hand == royal_flush:
+                return "Royal Flush"
+            
+            # check for straight flush
+            elif sorted_hand == hand:
+                return "Straight Flush"
+            
+            # else it's just a flush
+            else:
+                return "Flush"
+        
+        # count occurrences of rank
+        rank_counts = {}
+
+        for card in hand:
+            if card.rank in rank_counts:
+                rank_counts[card.rank] += 1
+            else:
+                rank_counts[card.rank] = 1
+        
+        num_ranks = len(rank_counts)
+        values = list(rank_counts.values)
+
+        # check for straight
+        if num_suits >= 5 and num_ranks >= 5:
+            return "Straight"
+
+        # hands regardless of suit
+        # check for four of a kind
+        if values.count(4) == 1:
+            return "Four of a Kind"
+        
+        # check for full house
+        elif values.count(3) == 1 and values.count(2) == 1:
+            return "Full House"
+        
+        # check for 3 of a kind
+        elif values.count(3) == 1:
+            return "Three of a Kind"
+        
+        # check for two pair
+        elif values.count(2) == 2:
+            return "Two Pair"
+        
+        # check for one pair
+        elif values.count(2) == 1:
+            return "One Pair"
+        
+        # return high card
+        else:
+            return "High Card"
+            
