@@ -33,6 +33,8 @@ class Game:
                 player.bet(self.blinds)
         
         winner = self.getWinner(self.players, self.community_cards)
+        
+        return winner
     
     # shuffle then deal cards
     def deal_cards(self):
@@ -53,22 +55,37 @@ class Game:
         self.community_cards.append(self.deck.deal_card)
     
     # determine winner
-    def getWinner(players, community_cards):
+    def getWinner(self, players, community_cards):
         rankings = []
+        hands = []
         winner = None
 
         # iterate through the players hands
         for player in players:
             hand = player.get_hand() + community_cards
 
-            # classify hand
+            # classify hand and assign ranking
             hand_class = self.classify_hand(hand)
-            rankings.append(self.hand_rankings[hand_class])
+            hands.append(hand_class)
+            hand_ranking = self.hand_rankings[hand_class]
+            rankings.append(hand_ranking)
 
-        return
+        # get lowest ranking in rankings
+        best_hand = min(rankings)
+        count = rankings.count(best_hand)
+        winner_index = -1
+
+        # assign winner
+        if count == 1:
+            winner_index = rankings.index(best_hand)
+            winner = players[winner_index]
+
+        # return None if it is a tie
+
+        return winner
     
     # set hand rankings
-    def set_handRankings():
+    def set_handRankings(self):
         rankings = {
             "High Card": 0,
             "One Pair": 1,
@@ -85,9 +102,9 @@ class Game:
         return rankings
 
     # hand classifier
-    def classify_hand(hand):
+    def classify_hand(self, hand):
         # give new variable for sorted hand
-        sorted_hand = sorted(hand for card in hand)
+        sorted_hand = sorted(hand, key=lambda card: card.rank)
 
         # count occurrences of each suit
         suit_counts = {}
@@ -156,4 +173,3 @@ class Game:
         # return high card
         else:
             return "High Card"
-            
