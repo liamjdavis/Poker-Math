@@ -62,7 +62,10 @@ class Game:
 
         # iterate through the players hands
         for player in players:
-            hand = player.get_hand() + community_cards
+            hand = player.hand + community_cards
+
+            for card in hand:
+                print(type(card))
 
             # classify hand and assign ranking
             hand_class = self.classify_hand(hand)
@@ -104,7 +107,7 @@ class Game:
     # hand classifier
     def classify_hand(self, hand):
         # give new variable for sorted hand
-        sorted_hand = sorted(hand, key=lambda card: card.rank)
+        sorted_hand = sorted(hand, key=lambda card: card.get_rank_value())
 
         # count occurrences of each suit
         suit_counts = {}
@@ -143,7 +146,7 @@ class Game:
                 rank_counts[card.rank] = 1
         
         num_ranks = len(rank_counts)
-        values = list(rank_counts.values)
+        values = list(rank_counts.values())
 
         # check for straight
         if num_suits >= 5 and num_ranks >= 5:

@@ -10,13 +10,6 @@ class Player:
         self.hand = []
         self.current_bet = 0
     
-    # getters
-    def get_hand(self):
-        return self.hand
-    
-    def get_money(self):
-        return self.money
-    
     # actions
     def receive_card(self, card):
         self.hand.append(card)
